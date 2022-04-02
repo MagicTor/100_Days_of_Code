@@ -6,6 +6,7 @@ PATH_TO_LETTER = "./Input/Letters/starting_letter.txt"
 PATH_TO_NAMES = "./Input/Names/invited_names.txt"
 PATH_TO_DESTINATION = "./Output/ReadyToSend/"
 
+
 class Mail_Merge:
     def __init__(self):
         self.names = self.get_names()
@@ -13,8 +14,7 @@ class Mail_Merge:
     def get_names(self):
         list_of_names = []
         with open(PATH_TO_NAMES) as names:
-            for line in names.readlines():
-                list_of_names.append(line.strip())
+            list_of_names = names.read().splitlines()
         return list_of_names
 
     def get_letter(self):
