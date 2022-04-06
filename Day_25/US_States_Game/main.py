@@ -34,9 +34,6 @@ while game_is_on:
         game_is_on = False
 
 # Print out all states not guessed by the user
-missing_states = []
-for state in data.state.to_list():
-    if state not in guessed_states:
-        missing_states.append(state)
+missing_states = [state for state in data.state.to_list() if state not in guessed_states]
 df = pandas.DataFrame(missing_states)
 df.to_csv("states_to_learn.csv")
