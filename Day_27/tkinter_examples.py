@@ -69,6 +69,7 @@ radiobutton1 = Radiobutton(text="Option1", value=1, variable=radio_state, comman
 radiobutton2 = Radiobutton(text="Option2", value=2, variable=radio_state, command=radio_used)
 radiobutton1.pack()
 radiobutton2.pack()
+print(radio_state.get())
 
 
 #Listbox
