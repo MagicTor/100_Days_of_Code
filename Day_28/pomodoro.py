@@ -21,6 +21,8 @@ def reset_timer():
     title_label.config(text="Timer", fg=GREEN)
     canvas.itemconfig(timer_text, text="00:00")
     check_mark.config(text="")
+    start_button.config(state="normal")
+    reset_button.config(state="disabled")
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 
@@ -36,6 +38,8 @@ def start_timer():
     else:
         count_down(WORK_MIN * 60)
         title_label.config(text="Work", fg=GREEN)
+    start_button.config(state="disabled")
+    reset_button.config(state="normal")
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 
@@ -71,10 +75,10 @@ canvas.grid(column=1, row=1)
 title_label = tk.Label(text="Timer", font=(FONT_NAME, 35, 'bold'), bg=YELLOW, fg=GREEN)
 title_label.grid(column=1, row=0)
 
-start_button = tk.Button(text="Start", command=start_timer)
+start_button = tk.Button(text="Start", command=start_timer, state="normal")
 start_button.grid(column=0, row=2)
 
-reset_button = tk.Button(text="Reset", command=reset_timer)
+reset_button = tk.Button(text="Reset", command=reset_timer, state="disabled")
 reset_button.grid(column=2, row=2)
 
 check_mark = tk.Label(text="", bg=YELLOW, fg=GREEN)
