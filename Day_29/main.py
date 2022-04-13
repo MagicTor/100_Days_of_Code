@@ -26,19 +26,22 @@ def generate_password():
 def save():
 
     website = website_entry.get()
+    email = email_entry.get()
     username = username_entry.get()
     password = password_entry.get()
 
-    if len(website) == 0 or len(username) == 0 or len(password) == 0:
+    if len(website) == 0 or len(username) == 0 or len(password) == 0 or len(email) == 0:
         messagebox.showinfo(title="Oops", message="Please don't leave any fields empty!")
     else:
-        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {username} "
-                                                              f"\nPassword: {password} \nIs it ok to save?")
+        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} "
+                                                              f"\nUsername: {username}\nPassword: {password} \n"
+                                                              f"Is it ok to save?")
         if is_ok:
             with open("data.txt", "a") as file:
-                file.write(f"{website} | {username} | {password}\n")
+                file.write(f"{website} | {email} | {username} | {password}\n")
                 website_entry.delete(0, END)
-                username_entry.insert(0, common_email)
+                email_entry.insert(0, common_email)
+                username_entry.delete(0, END)
                 password_entry.delete(0, END)
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -58,21 +61,26 @@ website_entry.grid(column=1, row=1, columnspan=2, sticky='W')
 website_entry.focus()
 
 common_email = "example@live.com"
-username_label = Label(text="Email/Username:")
-username_label.grid(column=0, row=2)
+email_label = Label(text="Email:")
+email_label.grid(column=0, row=2)
+email_entry = Entry(width=52)
+email_entry.insert(END, string=common_email)
+email_entry.grid(column=1, row=2, columnspan=2, sticky='W')
+
+username_label = Label(text="Username:")
+username_label.grid(column=0, row=3)
 username_entry = Entry(width=52)
-username_entry.insert(END, string=common_email)
-username_entry.grid(column=1, row=2, columnspan=2, sticky='W')
+username_entry.grid(column=1, row=3, columnspan=2, sticky='W')
 
 password_label = Label(text="Password:")
-password_label.grid(column=0, row=3)
+password_label.grid(column=0, row=4)
 password_entry = Entry(width=33)
-password_entry.grid(column=1, row=3, sticky='W')
+password_entry.grid(column=1, row=4, sticky='W')
 generate_password_button = Button(text="Generate Password", command=generate_password)
-generate_password_button.grid(column=2, row=3)
+generate_password_button.grid(column=2, row=4)
 
 add_button = Button(text="Add", width=44, command=save)
-add_button.grid(column=1, row=4, columnspan=2, sticky='W')
+add_button.grid(column=1, row=5, columnspan=2, sticky='W')
 
 
 window.mainloop()
