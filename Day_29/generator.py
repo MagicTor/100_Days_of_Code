@@ -9,12 +9,13 @@ lower = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', '
          'w', 'x', 'y', 'z']
 upper = [letter.upper() for letter in lower]
 
-password_characters = lower + upper + numbers + symbols
-
 class Popup():
     def __init__(self):
         self.password = ""
         self.password_length = 16
+        self.remaining = 16
+        self.qty_lower = 0
+        self.list_password = []
 
         # UI Setup
         self.popup = tk.Toplevel()
@@ -70,43 +71,42 @@ class Popup():
         self.do_it()
 
     def do_it(self):
-        """Create a password every time a widget is altered"""
-        # Get Numbers
+        """Create the password every time a widget is altered"""
+        self.password = ""  # Clear out any existing password
+        self.remaining = self.password_length  # Number of characters in password yet to be filled
+
         number_qty = int(self.spinbox_number.get())
         symbol_qty = int(self.spinbox_symbol.get())
 
-        space_taken = 0
-        space_taken += 1 if self.check_lower.get() else space_taken
-        space_taken += 1 if self.check_upper.get() else space_taken
-
         # Restrict numbers and symbols to half the password length
-        if (number_qty + symbol_qty) >= (self.password_length - space_taken):
-            self.spinbox_number["to"] = number_qty
-            self.spinbox_symbol["to"] = symbol_qty
-        else:
-            self.spinbox_number["to"] = self.password_length - space_taken
-            self.spinbox_symbol["to"] = self.password_length - space_taken
-
-        remaining = self.password_length
-        password_list = []
-        if self.check_symbol.get():
-            password_list += [choice(symbols) for char in range(symbol_qty)]
-            remaining -= symbol_qty
         if self.check_number.get():
-            password_list += [choice(numbers) for char in range(number_qty)]
-            remaining -= number_qty
-        if self.check_lower.get() and self.check_upper.get():
-            letter_list = lower + upper
-            password_list += [choice(letter_list) for char in range(remaining)]
-        elif self.check_lower.get():
-            password_list += [choice(lower) for char in range(remaining)]
-        elif self.check_upper.get():
-            password_list += [choice(upper) for char in range(remaining)]
+            self.spinbox_number["to"] = self.password_length - 2
+        if self.check_symbol.get():
+            self.spinbox_symbol["to"] = self.password_length - 2
 
-        # password_list += [choice(upper)]
-        # password_list = [choice(password_characters) for char in range(self.password_length)]
-
-        self.password = "".join(password_list)
+        # Generate the password
+        if self.check_symbol.get():
+            for _ in range(0, symbol_qty):
+                self.password += choice(symbols)
+            self.remaining = self.password_length - len(self.password)
+        if self.check_number.get():
+            for _ in range(0, number_qty):
+                self.password += choice(numbers)
+            self.remaining = self.password_length - len(self.password)
+        if self.check_lower.get() and self.remaining > 0:
+            if self.check_upper.get():
+                self.qty_lower = randint(1, self.remaining)
+            else:
+                self.qty_lower = self.remaining
+            for _ in range(1, self.qty_lower):
+                self.password += choice(lower)
+            self.remaining = self.password_length - len(self.password)
+        if self.check_upper.get() and self.remaining > 0:
+            for _ in range(0, self.remaining):
+                self.password = self.password + choice(upper)
+        self.list_password = list(self.password)
+        shuffle(self.list_password)
+        self.password = "".join(self.list_password)
         self.label_password["text"] = self.password
 
     def close(self):
