@@ -34,7 +34,7 @@ class Popup():
         self.label_title = tk.Label(self.popup, text="Password Generator", fg='dark green', font=("Sergoe UI",16,"bold"))
         self.label_password = tk.Label(self.popup, text="Password", fg="blue", font=("Sergoe UI",16,"bold"),
                                        width=16, height=3, relief='sunken')
-        self.scale_length = tk.Scale(self.popup, label="Password Length", from_=0, to=99, length=200,
+        self.scale_length = tk.Scale(self.popup, label="Password Length", from_=1, to=99, length=200,
                                      orient=tk.HORIZONTAL, command=self.scale)
         self.checkbox_upper = tk.Checkbutton(self.popup, text="Use A-Z", variable=self.check_upper, command=self.do_it)
         self.checkbox_lower = tk.Checkbutton(self.popup, text="Use a-z", variable=self.check_lower, command=self.do_it)
@@ -72,13 +72,13 @@ class Popup():
 
     def do_it(self):
         """Create the password every time a widget is altered"""
-        self.password = ""  # Clear out any existing password
+        self.password = []  # Clear out any existing password
         self.remaining = self.password_length  # Number of characters in password yet to be filled
 
         number_qty = int(self.spinbox_number.get())
         symbol_qty = int(self.spinbox_symbol.get())
 
-        # Restrict numbers and symbols to half the password length
+        # Restrict numbers and symbols to two less than the password length to make room for the upper and lowercase
         if self.check_number.get():
             self.spinbox_number["to"] = self.password_length - 2
         if self.check_symbol.get():
@@ -86,24 +86,21 @@ class Popup():
 
         # Generate the password
         if self.check_symbol.get():
-            for _ in range(0, symbol_qty):
-                self.password += choice(symbols)
+            self.password += [choice(symbols) for _ in range(0, symbol_qty)]
             self.remaining = self.password_length - len(self.password)
         if self.check_number.get():
-            for _ in range(0, number_qty):
-                self.password += choice(numbers)
+            self.password += [choice(numbers) for _ in range(0, number_qty)]
             self.remaining = self.password_length - len(self.password)
         if self.check_lower.get() and self.remaining > 0:
             if self.check_upper.get():
                 self.qty_lower = randint(1, self.remaining)
             else:
                 self.qty_lower = self.remaining
-            for _ in range(1, self.qty_lower):
-                self.password += choice(lower)
+            self.password += [choice(lower) for _ in range(1, self.qty_lower)]
             self.remaining = self.password_length - len(self.password)
         if self.check_upper.get() and self.remaining > 0:
-            for _ in range(0, self.remaining):
-                self.password = self.password + choice(upper)
+            self.password += [choice(upper) for _ in range(0, self.remaining)]
+
         self.list_password = list(self.password)
         shuffle(self.list_password)
         self.password = "".join(self.list_password)
